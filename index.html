@@ -787,7 +787,7 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>No. Daftar</th> <th>Nama Lengkap</th>
+                                <th>Nama Lengkap</th>
                                 <th>NIK</th>
                                 <th>TTL</th>
                                 <th>Status</th>
@@ -795,7 +795,8 @@
                             </tr>
                         </thead>
                         <tbody id="tabel-data-pendaftar">
-                            <tr><td colspan="7" style="text-align: center;">Memuat data pendaftar...</td></tr> </tbody>
+                            <tr><td colspan="6" style="text-align: center;">Memuat data pendaftar...</td></tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -916,12 +917,7 @@
             const btn = document.getElementById('btnKirimForm');
             btn.innerHTML = 'MEMPROSES...'; btn.disabled = true;
 
-            // --- GENERATE NOMOR PENDAFTARAN ---
-            const nomorAcak = Math.floor(10000 + Math.random() * 90000);
-            const nomorPendaftaran = "SDN21-26-" + nomorAcak;
-
             const dataSiswa = {
-                nomor_pendaftaran: nomorPendaftaran, // TAMBAHAN DATA
                 jalur: jalurDipilih,
                 nik: document.getElementById('inp-nik').value,
                 nisn: document.getElementById('inp-nisn').value,
@@ -946,7 +942,7 @@
                 const { error } = await clientSupabase.from('pendaftaran').insert([dataSiswa]);
                 if (error) alert("Gagal: " + error.message);
                 else {
-                    alert("PENDAFTARAN BERHASIL!\n\nData Anda telah terkirim.\nNOMOR PENDAFTARAN ANDA: " + nomorPendaftaran + "\n\nHarap simpan/catat nomor ini dengan baik.");
+                    alert("Pendaftaran Berhasil! Data Anda telah terkirim.");
                     document.getElementById('formPendaftaranSiswa').reset();
                     kembaliKeDepan();
                 }
@@ -962,13 +958,13 @@
 
             try {
                 const { data, error } = await clientSupabase.from('pendaftaran').select('*').order('created_at', { ascending: false });
-                if (error) { tbody.innerHTML = `<tr><td colspan="7">Error: ${error.message}</td></tr>`; return; }
+                if (error) { tbody.innerHTML = `<tr><td colspan="6">Error: ${error.message}</td></tr>`; return; }
 
                 window.dataPendaftarGlobal = data; 
                 counter.innerText = data.length;
 
                 if (data.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">Belum ada pendaftar.</td></tr>`; return;
+                    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Belum ada pendaftar.</td></tr>`; return;
                 }
 
                 let html = '';
@@ -981,7 +977,7 @@
                     html += `
                         <tr>
                             <td>${index + 1}</td>
-                            <td><strong style="color:var(--secondary);">${siswa.nomor_pendaftaran || '-'}</strong></td> <td style="color:#fff; font-weight:bold;">${siswa.nama}</td>
+                            <td style="color:#fff; font-weight:bold;">${siswa.nama}</td>
                             <td>${siswa.nik}</td>
                             <td>${siswa.tempat_lahir}, ${tgl}</td>
                             <td>${statusBadge}</td>
@@ -1048,7 +1044,7 @@
                     </div>
 
                     <table>
-                        <tr><td class="col-label" style="background-color: #dbeafe;">Nomor Pendaftaran</td><td style="font-size: 18px; font-weight: bold; color: #1e3a8a;">${siswa.nomor_pendaftaran || '-'}</td></tr> <tr><td class="col-label">Nomor Induk Kependudukan (NIK)</td><td>${siswa.nik}</td></tr>
+                        <tr><td class="col-label">Nomor Induk Kependudukan (NIK)</td><td>${siswa.nik}</td></tr>
                         <tr><td class="col-label">NISN</td><td>${siswa.nisn || '-'}</td></tr>
                         <tr><td class="col-label">Nama Lengkap Siswa</td><td style="font-weight:bold; text-transform:uppercase;">${siswa.nama}</td></tr>
                         <tr><td class="col-label">Tempat, Tanggal Lahir</td><td>${siswa.tempat_lahir}, ${siswa.tanggal_lahir}</td></tr>
@@ -1073,12 +1069,12 @@
                         </div>
                     </div>
 
-                    <script>
+                    <scr` + `ipt>
                         window.onload = function() { window.print(); }
-                    <\/script>
+                    </scr` + `ipt>
                 </body>
                 </html>
-            `)
+            `);
             printWindow.document.close();
         }
 
