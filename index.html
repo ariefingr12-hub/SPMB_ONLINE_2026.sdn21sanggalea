@@ -360,62 +360,7 @@
         <section id="pendaftaran-section">
             <button type="button" class="back-btn" onclick="kembaliKeDepan()"><i class="fas fa-arrow-left"></i> Kembali</button>
             
-            <form id="formPendaftaranSiswa" onsubmit="async function kirimFormulir(event) {
-    event.preventDefault();
-    
-    const jalurDipilih = document.getElementById('inp-jalur').value;
-    if(!jalurDipilih) { alert("Silakan pilih Jalur Pendaftaran terlebih dahulu!"); return; }
-
-    if (!clientSupabase || supabaseKey.includes('MASUKKAN')) {
-        alert("Database belum diatur. Masukkan Key 'eyJ' Anda di dalam kode."); return;
-    }
-
-    const btn = document.getElementById('btnKirimForm');
-    btn.innerHTML = 'MEMPROSES...'; btn.disabled = true;
-
-    // === 1. LOGIKA GENERATE NOMOR PENDAFTARAN OTOMATIS ===
-    const hariIni = new Date();
-    const tahun = hariIni.getFullYear();
-    const bulan = String(hariIni.getMonth() + 1).padStart(2, '0');
-    const tanggal = String(hariIni.getDate()).padStart(2, '0');
-    const angkaAcak = Math.floor(1000 + Math.random() * 9000); // Menghasilkan 4 digit angka acak
-    const noPendaftaran = `PPDB-${tahun}${bulan}${tanggal}-${angkaAcak}`;
-    // ====================================================
-
-    const dataSiswa = {
-        nomor_pendaftaran: noPendaftaran, // <-- Menyimpan nomor otomatis ke database
-        jalur: jalurDipilih,
-        nik: document.getElementById('inp-nik').value,
-        nisn: document.getElementById('inp-nisn').value,
-        nama: document.getElementById('inp-nama').value,
-        tempat_lahir: document.getElementById('inp-tempat-lahir').value,
-        tanggal_lahir: document.getElementById('inp-tanggal-lahir').value,
-        jenis_kelamin: document.getElementById('inp-jk').value,
-        agama: document.getElementById('inp-agama').value,
-        asal_sekolah: document.getElementById('inp-asal-sekolah').value,
-        jalan_dusun: document.getElementById('inp-jalan').value,
-        rt_rw: document.getElementById('inp-rtrw').value,
-        kelurahan: document.getElementById('inp-kelurahan').value,
-        kecamatan: document.getElementById('inp-kecamatan').value,
-        nama_ayah: document.getElementById('inp-ayah').value,
-        wa_ayah: document.getElementById('inp-wa-ayah').value,
-        nama_ibu: document.getElementById('inp-ibu').value,
-        wa_ibu: document.getElementById('inp-wa-ibu').value,
-        status: 'Menunggu' 
-    };
-
-    try {
-        const { error } = await clientSupabase.from('pendaftaran').insert([dataSiswa]);
-        if (error) alert("Gagal: " + error.message);
-        else {
-            // Berikan notifikasi sukses yang menampilkan nomor pendaftaran siswa
-            alert(`Pendaftaran Berhasil!\n\nNOMOR PENDAFTARAN ANDA: ${noPendaftaran}\n\nHarap simpan nomor ini dengan baik. Data Anda telah terkirim.`);
-            document.getElementById('formPendaftaranSiswa').reset();
-            kembaliKeDepan();
-        }
-    } catch (err) { alert("Terjadi masalah jaringan."); } 
-    finally { btn.innerHTML = '<i class="fas fa-paper-plane"></i> KIRIM FORMULIR PENDAFTARAN'; btn.disabled = false; }
-}">
+            <form id="formPendaftaranSiswa" onsubmit="kirimFormulir(event)">
                 
                 <div class="form-section-card">
                     <div class="form-header"><i class="fas fa-id-card"></i> DATA PENDAFTARAN & JALUR</div>
@@ -840,15 +785,15 @@
                 <div class="table-responsive">
                     <table class="admin-table">
                         <thead>
-    <tr>
-        <th>No</th>
-        <th>No. Pendaftaran</th> <th>Nama Lengkap</th>
-        <th>NIK</th>
-        <th>TTL</th>
-        <th>Status</th>
-        <th>Aksi (Verifikasi / Cetak)</th>
-    </tr>
-</thead>
+                            <tr>
+                                <th>No</th>
+                                <th>No. Daftar</th> <th>Nama Lengkap</th>
+                                <th>NIK</th>
+                                <th>TTL</th>
+                                <th>Status</th>
+                                <th>Aksi (Verifikasi / Cetak)</th>
+                            </tr>
+                        </thead>
                         <tbody id="tabel-data-pendaftar">
                             <tr><td colspan="7" style="text-align: center;">Memuat data pendaftar...</td></tr> </tbody>
                     </table>
